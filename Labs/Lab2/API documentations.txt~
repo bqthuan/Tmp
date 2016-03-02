@@ -1,0 +1,17 @@
+Method: GET
+URL: http://128.199.72.110:3750/convert
+Params:
+	src: origin unit
+	des: destination unit
+	val: value
+Supported units:
+	dollar - vietnam
+	vietnam - dollar
+
+Example:
+GET: http://128.199.72.110:3750/convert?src=dollar&des=vietnam&val=1000
+Result if success:
+	
+
+Result if error:
+
