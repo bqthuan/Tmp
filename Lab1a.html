@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src=https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js></script>
+</head>
+
+<body>	
+	<table>
+		<tr>
+			<td> <p> latlng</p> </td>
+			<td><input id="latlng" type="text" size="30"></input></td>
+			<td> <p> (Nhap toa do.vd:15.574281,108.4677385) </p> </td>
+		</tr>
+		<tr>
+		<td><p>Address: </p></td>
+		<td>
+		<p id=result></p></td>
+		<tr>
+	</table>
+	<button id=showBtn onclick='myFunction()'>Show my address</button>
+	<script>
+		function myFunction() {
+			var latLon = document.getElementById("latlng").value;		
+			$.ajax({
+				type: 'GET',
+				url: 'http://maps.googleapis.com/maps/api/geocode/json?latlng=' + latLon,
+				success: function (data) {
+				
+					var text = JSON.stringify(data);
+					obj = JSON.parse(text);
+					document.getElementById("result").innerHTML =obj.results[0].formatted_address;
+				},
+				error: function (xhr, status, error) {
+					alert(error);
+				}
+			});
+		}
+	</script>
+</body>
+</html>
