@@ -1,0 +1,84 @@
+module.exports = function (io) {
+    fs = require('fs');
+    io['rooms'] = [];
+    io.on('connect', function (client) {
+        client.on('getRooms', function () {
+            client.emit('rooms', getRooms());
+        })
+        client['info'] = client.handshake.query.info;
+        client['rooms'] = [];
+        client.on('join', function (room) {
+            if (io['rooms'].indexOf(room) == -1) {
+                io['rooms'].push(room);
+            }
+            client['rooms'].push(room)
+            client.join(room, function (err) {
+                if (err) {
+
+                } else {
+                    client.emit('users', getUsers(room));
+                    client.broadcast.to(room).emit('addUser', client['info']);
+                }
+            })
+        })
+
+        client.on('chat', function (room, msg) {
+            client.broadcast.to(room, msg);
+        })
+        client.on('sendFile', function (room, name, size, buffer) {
+            var fileName = path.join(__dirname, '/files/', name);
+            fs.open(fileName, 'a', 0755, function (err, fd) {
+                if (err) {
+
+                } else {
+                    fs.write(fd, buffer, null, 'Binary', function (err, written, buff) {
+                        if (err) {
+
+                        } else {
+                            fs.close(fd, function () {
+
+                            })
+                        }
+
+                    })
+                }
+            })
+        })
+
+        client.on('leave', function (room) {
+            client.leave(room, function (err) {
+                if (err) {
+
+                } else {
+                    client.emit('users', getUsers(room));
+                    client.broadcast.to(room).emit('removeUser', client['info']);
+                }
+            })
+        })
+        client.on('disconnect', function () {
+            var rooms = client['rooms'];
+            for (var i = 0; i < rooms.length; ++i) {
+                client.broadcast.to(rooms[i]).emit('removeUser', client['info']);
+            }
+
+        })
+    })
+
+    function getRooms() {
+        var rooms = [];
+        for (var i = 0; i < io['rooms'].length; ++i) {
+            var name = io['rooms'][i];
+            rooms.push({name: name, size: (io.of('/').in(name).clients()).length});
+        }
+        return rooms;
+    }
+
+    function getUsers(room) {
+        var members = [];
+        var clients = io.of('/').in('room').clients();
+        for (var i = 0; i < clients.length; ++i) {
+            members.push(clients[i]['info']);
+        }
+        return members;
+    }
+}
