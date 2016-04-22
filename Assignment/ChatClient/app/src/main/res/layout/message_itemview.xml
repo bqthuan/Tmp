@@ -8,29 +8,75 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_msg_backrgound"
         android:orientation="vertical">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:cardBackgroundColor="#FFFFFF">
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="5dp">
+                android:layout_height="match_parent">
 
-                <TextView
-                    android:id="@+id/userTxt"
-                    android:layout_width="50dp"
-                    android:layout_height="match_parent"/>
-
-                <com.rockerhieu.emojicon.EmojiconTextView
-                    android:id="@+id/msgTxt"
+                <LinearLayout
+                    android:id="@+id/otherMsgContainer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/otherUserTxt"
+                        android:layout_width="100dp"
+                        android:layout_height="match_parent"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text=":"/>
+
+                    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+                        android:id="@+id/otherMsgTxt"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingLeft="10dp"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/meMsgContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="50dp"
+                    android:orientation="horizontal"
+                    android:padding="5dp">
+
+
+                    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+                        android:id="@+id/meMsgTxt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="right"
+                        android:paddingRight="10dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text=":"/>
+
+                    <TextView
+                        android:id="@+id/meUserTxt"
+                        android:layout_width="100dp"
+                        android:textStyle="bold"
+                        android:layout_height="match_parent"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+
         </android.support.v7.widget.CardView>
     </LinearLayout>
 </layout>

@@ -25,26 +25,24 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/showEmojiBtn"
+                android:id="@+id/emoji_btn"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/emoji_1f0cf"/>
+                android:src="@drawable/ic_action_keyboard"/>
 
-
-            <com.rockerhieu.emojicon.EmojiconEditText
-                android:id="@+id/editEmojicon"
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                android:id="@+id/emojicon_edit_text"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 emojicon:emojiconSize="28sp"/>
 
             <ImageView
-                android:id="@+id/sendBtn"
+                android:id="@+id/submit_btn"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY"
-                android:src="@drawable/emoji_1f0cf"/>
+                android:src="@android:drawable/ic_menu_send"/>
+
         </LinearLayout>
 
     </LinearLayout>

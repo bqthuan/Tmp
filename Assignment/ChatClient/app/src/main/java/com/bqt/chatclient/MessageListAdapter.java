@@ -4,6 +4,7 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bqt.chatclient.databinding.MessageItemViewBinding;
@@ -58,8 +59,17 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         public void setJSONObject(JSONObject JSONObject) {
             mJSONObject = JSONObject;
-            mBinding.userTxt.setText(mJSONObject.optString("name"));
-            mBinding.msgTxt.setText(mJSONObject.optString("msg"));
+
+            boolean isMe = mJSONObject.optBoolean("isMe");
+            mBinding.meMsgContainer.setVisibility(isMe ? View.VISIBLE : View.INVISIBLE);
+            mBinding.otherMsgContainer.setVisibility(!isMe ? View.VISIBLE : View.INVISIBLE);
+            if (isMe) {
+                mBinding.meUserTxt.setText(mJSONObject.optString("user"));
+                mBinding.meMsgTxt.setText(mJSONObject.optString("msg"));
+            } else {
+                mBinding.otherUserTxt.setText(mJSONObject.optString("user"));
+                mBinding.otherMsgTxt.setText(mJSONObject.optString("msg"));
+            }
 
         }
     }
