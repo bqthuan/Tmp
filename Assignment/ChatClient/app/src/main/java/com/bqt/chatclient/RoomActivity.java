@@ -37,12 +37,10 @@ public class RoomActivity extends AppCompatActivity {
         mEmojIconActions.setKeyboardListener(new EmojIconActions.KeyboardListener() {
             @Override
             public void onKeyboardOpen() {
-                Log.e("Keyboard", "open");
             }
 
             @Override
             public void onKeyboardClose() {
-                Log.e("Keyboard", "close");
             }
         });
 
@@ -81,7 +79,7 @@ public class RoomActivity extends AppCompatActivity {
                     JSONObject user = getUser(data.optString("userId"));
                     JSONObject msg = data.getJSONObject("msg");
                     msg.put("user", user.optString("username"));
-                    msg.put("isMe", user.optString("id").equals("/#"+mSocket.id()));
+                    msg.put("isMe", user.optString("id").equals("/#" + mSocket.id()));
 
                     mMessageListFragment.addMessage(msg);
                 } catch (JSONException e) {

@@ -45,6 +45,7 @@ public class MessageListFragment extends Fragment {
                     mHandler.postDelayed(this, 100);
                 } else {
                     mMessageListAdapter.addMessage(jsonObject);
+                    mBinding.recyclerView.scrollToPosition(mMessageListAdapter.getItemCount() - 1);
                 }
             }
         });

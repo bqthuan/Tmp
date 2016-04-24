@@ -62,7 +62,7 @@ public class AuthActivity extends AppCompatActivity {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", username);
             opts.query = "user=" + jsonObject.toString();
-            mClient = IO.socket("http://10.0.2.2:3000", opts);
+            mClient = IO.socket("http://128.199.72.110:3757", opts);
             mClient.on("auth", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {

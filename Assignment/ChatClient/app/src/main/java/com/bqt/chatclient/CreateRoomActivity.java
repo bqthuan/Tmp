@@ -23,6 +23,7 @@ public class CreateRoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_create_room);
 
+        getSupportActionBar().setTitle("Create room");
         mClient = ((ChatApplication) getApplication()).getSocket();
 
         mBinding.createRoom.setOnClickListener(new View.OnClickListener() {

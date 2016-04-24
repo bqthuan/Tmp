@@ -27,6 +27,14 @@ import java.util.List;
  */
 public class RoomListFragment extends Fragment {
 
+    public void clearSearch() {
+        mRoomListAdapter.getFilter().filter("");
+    }
+
+    public void search(String s) {
+        mRoomListAdapter.getFilter().filter(s);
+    }
+
     public interface OnRoomClickListener {
         void onRoomClick(JSONObject jsonObject);
     }

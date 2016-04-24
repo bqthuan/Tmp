@@ -5,11 +5,14 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SearchView;
 
 import com.bqt.chatclient.databinding.RoomListActivityBinding;
 
@@ -20,7 +23,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class RoomListActivity extends AppCompatActivity
-        implements RoomListFragment.OnRoomClickListener {
+        implements RoomListFragment.OnRoomClickListener, SearchView.OnQueryTextListener {
 
     private RoomListActivityBinding mBinding;
     private RoomListFragment mRoomListFragment;
@@ -43,12 +46,20 @@ public class RoomListActivity extends AppCompatActivity
         mUsername = getIntent().getStringExtra("username");
         getSupportActionBar().setTitle(mUsername);
 
-
         mBinding.addRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 startActivity(new Intent(RoomListActivity.this, CreateRoomActivity.class));
+            }
+        });
+
+        mBinding.swipeRefreshLayout.setRefreshing(true);
+        mBinding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mBinding.swipeRefreshLayout.setRefreshing(true);
+                mClient.emit("updateRoomList");
             }
         });
 
@@ -63,6 +74,13 @@ public class RoomListActivity extends AppCompatActivity
             public void call(Object... args) {
                 JSONArray jsonArray = (JSONArray) args[0];
                 mRoomListFragment.setData(jsonArray);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mBinding.swipeRefreshLayout.setRefreshing(false);
+                    }
+                });
+
             }
         });
 
@@ -77,9 +95,29 @@ public class RoomListActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onQueryTextSubmit(String s) {
+
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String s) {
+        if (TextUtils.isEmpty(s)) {
+            mRoomListFragment.clearSearch();
+        } else {
+            mRoomListFragment.search(s);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = new SearchView(this);
+        item.setActionView(searchView);
+        searchView.setOnQueryTextListener(this);
         return true;
     }
 

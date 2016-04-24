@@ -6,9 +6,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.bqt.chatclient.databinding.RoomItemViewBinding;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -18,8 +19,9 @@ import java.util.List;
 /**
  * Created by mobiledev.bqt@gmail.com.
  */
-public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomViewHolder> {
-
+public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomViewHolder>
+        implements Filterable {
+    private List<JSONObject> mOriginData = new ArrayList<>();
     private List<JSONObject> mData = new ArrayList<>();
     private View.OnClickListener mOnItemClickListener;
 
@@ -28,6 +30,8 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomVi
     }
 
     public void setData(List<JSONObject> data) {
+        mOriginData.clear();
+        mOriginData.addAll(data);
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
@@ -51,6 +55,36 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomVi
         return mData.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                FilterResults results = new FilterResults();
+                List<JSONObject> data = new ArrayList<>();
+                for (JSONObject object : mOriginData) {
+                    if (object.optString("name").toLowerCase().contains(charSequence.toString())) {
+                        data.add(object);
+                    }
+                }
+                results.count = data.size();
+                results.values = data;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                mData.clear();
+                if (filterResults.count == 0) {
+
+                } else {
+                    mData.addAll((List<JSONObject>) filterResults.values);
+                }
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     public static class RoomViewHolder extends RecyclerView.ViewHolder {
         private RoomItemViewBinding mBinding;
         private JSONObject mJSONObject;
@@ -58,6 +92,7 @@ public class RoomListAdapter extends RecyclerView.Adapter<RoomListAdapter.RoomVi
         public RoomViewHolder(RoomItemViewBinding binding) {
             super(binding.getRoot());
             mBinding = binding;
+            mBinding.cardView.setUseCompatPadding(true);
         }
 
         public JSONObject getJSONObject() {
